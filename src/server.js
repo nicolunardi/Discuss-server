@@ -1,5 +1,6 @@
 import "./config/loadEnv.js";
 import express from "express";
+import cors from "cors";
 import mongoose from "mongoose";
 import {
   authRoutes,
@@ -8,15 +9,19 @@ import {
   messageRoutes,
 } from "./routes/index.js";
 import dbConnect from "./config/db.js";
+import auth from "./middleware/auth.middleware.js";
 
 const app = express();
 
 const port = process.env.PORT || 3000;
 
+app.use(cors());
 app.use(express.json());
 // doesn't need auth
 app.use("/auth", authRoutes);
-// needs auth place auth middleware here
+
+// all routes taht require being logged in
+app.use(auth);
 app.use("/channels", channelRoutes);
 app.use("/users", userRoutes);
 app.use("/messages", messageRoutes);

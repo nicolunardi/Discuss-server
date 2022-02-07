@@ -33,9 +33,10 @@ const userSchema = new Schema({
 // remove unwanted attributes when JSON is requested
 mongoose.set("toJSON", {
   transform: (doc, ret) => {
-    delete ret._id;
+    ret.userId = ret._id;
     delete ret.password;
     delete ret.__v;
+    delete ret._id;
   },
 });
 

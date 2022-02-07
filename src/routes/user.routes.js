@@ -1,11 +1,9 @@
 import express from "express";
+import { allUsers } from "../controllers/userController.controller.js";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  console.log("all users");
-  res.send("all users");
-});
+router.get("/", allUsers);
 
 router.put("/", (req, res) => {
   res.send("update user");
