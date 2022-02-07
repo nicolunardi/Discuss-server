@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import User from "../models/User.model.js";
 import bcrypt from "bcryptjs";
+import { User } from "../models/index.js";
 
 /**
  * returns an array of all users
@@ -8,9 +8,9 @@ import bcrypt from "bcryptjs";
 export const allUsers = async (req, res) => {
   try {
     const users = await User.find();
-    res.status(200).send({ users });
+    res.status(200).json({ users });
   } catch (error) {
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 
@@ -24,12 +24,12 @@ export const getUser = async (req, res) => {
     if (!user) {
       return res
         .status(404)
-        .send({ error: "No user exists with that user id" });
+        .json({ error: "No user exists with that user id" });
     }
 
-    res.status(200).send(user);
+    res.status(200).json(user);
   } catch (error) {
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };
 /**
@@ -42,7 +42,7 @@ export const updateUser = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).send("That user doesn't exist.");
+      return res.status(404).json("That user doesn't exist.");
     }
     // update the user and save to the db
     user.name = name;
@@ -52,8 +52,8 @@ export const updateUser = async (req, res) => {
 
     await user.save();
 
-    return res.status(200).send("User updated successfully.");
+    return res.status(200).json("User updated successfully.");
   } catch (error) {
-    res.status(400).send({ error });
+    res.status(400).json({ error });
   }
 };

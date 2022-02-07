@@ -32,7 +32,7 @@ const userSchema = new Schema({
 });
 
 // remove unwanted attributes when JSON is requested
-mongoose.set("toJSON", {
+userSchema.set("toJSON", {
   transform: (doc, ret) => {
     ret.userId = ret._id;
     delete ret.password;

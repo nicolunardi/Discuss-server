@@ -1,19 +1,17 @@
 import express from "express";
+import {
+  allChannels,
+  createChannel,
+  getChannel,
+} from "../controllers/channelController.controller.js";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("all channels");
-});
+router.get("/", allChannels);
 
-router.post("/", (req, res) => {
-  res.send("new channel");
-});
+router.post("/", createChannel);
 
-router.get("/:id", (req, res) => {
-  console.log(req.params.id);
-  res.send(`channel of id ${req.params.id}`);
-});
+router.get("/:id", getChannel);
 
 router.put("/:id", (req, res) => {
   res.send("update channel of id", req.params.id);

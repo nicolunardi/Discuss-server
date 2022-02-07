@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import User from "../models/User.model.js";
+import { User } from "../models/index.js";
 import bcrypt from "bcryptjs";
 import { createJWT } from "../utils/index.js";
 
@@ -64,5 +64,5 @@ export const register = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  return res.status(200).send("Logged out successfully");
+  return res.status(200).json({});
 };

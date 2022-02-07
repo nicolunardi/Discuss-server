@@ -38,4 +38,12 @@ const channelSchema = new Schema({
   },
 });
 
+channelSchema.set("toJSON", {
+  transform: (doc, ret) => {
+    ret.id = ret._id;
+    delete ret.__v;
+    delete ret._id;
+  },
+});
+
 export default mongoose.model("channel", channelSchema);
