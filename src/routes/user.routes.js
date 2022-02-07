@@ -1,16 +1,16 @@
 import express from "express";
-import { allUsers } from "../controllers/userController.controller.js";
+import {
+  allUsers,
+  getUser,
+  updateUser,
+} from "../controllers/userController.controller.js";
 
 const router = express.Router();
 
 router.get("/", allUsers);
 
-router.put("/", (req, res) => {
-  res.send("update user");
-});
+router.put("/", updateUser);
 
-router.get("/:userId", (req, res) => {
-  res.send(`get specific user of id ${req.params.userId}`);
-});
+router.get("/:userId", getUser);
 
 export default router;

@@ -21,7 +21,7 @@ app.use(express.json());
 app.use("/auth", authRoutes);
 
 // all routes taht require being logged in
-app.use(auth);
+// app.use(auth);
 app.use("/channels", channelRoutes);
 app.use("/users", userRoutes);
 app.use("/messages", messageRoutes);
