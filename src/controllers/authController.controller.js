@@ -18,9 +18,8 @@ export const login = async (req, res) => {
     if (user && (await bcrypt.compare(password, user.password))) {
       // create token
       const token = createJWT({ email });
-      const { name, bio, image } = user;
 
-      return res.status(200).json({ name, email, bio, image, token });
+      return res.status(200).json({ ...user.toJSON(), token });
     } else {
       return res.status(400).json({ error: "Invalid email or password." });
     }
@@ -55,17 +54,15 @@ export const register = async (req, res) => {
     });
 
     // create JWT and send token
-    console.log("here");
     const token = createJWT({ email });
     // remove password and add token to object sent in response
-    const { bio, image } = newUser;
 
-    return res.status(200).json({ name, email, bio, image, token });
+    return res.status(200).json({ ...newUser.toJSON(), token });
   } catch (error) {
     return res.status(400).json(error);
   }
 };
 
 export const logout = async (req, res) => {
-  // do after making jwt tokens
+  return res.status(200).send("Logged out successfully");
 };
