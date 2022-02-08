@@ -2,7 +2,11 @@ import { Channel, User } from "../models/index.js";
 
 export const allChannels = async (req, res) => {
   try {
-    const channels = await Channel.find();
+    const { id } = req.payload;
+    // return only channels that are public or the user is a member of
+    const channels = await Channel.find({
+      $or: [{ private: false }, { members: [id] }],
+    });
     return res.status(200).json({ channels });
   } catch (error) {
     return res.status(400).json({ error });
@@ -38,8 +42,7 @@ export const createChannel = async (req, res) => {
 export const getChannel = async (req, res) => {
   try {
     const channelId = req.params.id;
-    const channel = await Channel.find({ _id: channelId });
-
+    const channel = await Channel.findOne({ _id: channelId });
     if (!channel) {
       return res
         .status(404)

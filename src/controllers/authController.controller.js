@@ -14,10 +14,9 @@ export const login = async (req, res) => {
 
     // check that the user exists in the database
     const user = await User.findOne({ email });
-
     if (user && (await bcrypt.compare(password, user.password))) {
       // create token
-      const token = createJWT({ email });
+      const token = createJWT({ email, id: user._id });
 
       return res.status(200).json({ ...user.toJSON(), token });
     } else {
@@ -54,7 +53,7 @@ export const register = async (req, res) => {
     });
 
     // create JWT and send token
-    const token = createJWT({ email });
+    const token = createJWT({ email, id: newUser._id });
     // remove password and add token to object sent in response
 
     return res.status(200).json({ ...newUser.toJSON(), token });

@@ -1,14 +1,14 @@
 import express from "express";
+import {
+  getMessages,
+  createMessage,
+} from "../controllers/messageController.controller.js";
 
 const router = express.Router();
 
-router.get("/:channelId", (req, res) => {
-  res.send("get channel messages");
-});
+router.get("/:channelId", getMessages);
 
-router.post("/:channelId", (req, res) => {
-  res.send("send messages to channel");
-});
+router.post("/:channelId", createMessage);
 
 router.put("/:channelId/:messageId", (req, res) => {
   res.send("update message of channel");

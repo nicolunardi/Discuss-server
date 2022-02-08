@@ -34,7 +34,7 @@ const channelSchema = new Schema({
   },
   messages: {
     type: [Schema.Types.ObjectId],
-    ref: "messages",
+    ref: "message",
   },
 });
 
