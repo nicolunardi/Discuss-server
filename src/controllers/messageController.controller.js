@@ -2,16 +2,27 @@ import { Channel, Message } from "../models/index.js";
 
 export const getMessages = async (req, res) => {
   try {
-    //   get the start value for messages
+    //   number of messages to send back
+    const numberOfMsgs = parseInt(req.query.number);
+    // start is the index at which to get messages from
     const start = parseInt(req.query.start);
+    // the last index of messages to get
+    const end = start + numberOfMsgs;
     const { channelId } = req.params;
 
-    const channel = await Channel.findOne({ _id: channelId });
+    // get the channel so that the messages can be returned
+    const channel = await Channel.findOne({ _id: channelId }).populate(
+      "messages"
+    );
     if (!channel) {
       return res.status(404).json({ error: "Channel does not exist" });
     }
-    // TODO rest of message logic
-    return res.status(200).json({ messages: channel.messages });
+
+    // reverse the array as to get the newest messages first and slice
+    // based on start and end
+    const messages = channel.messages.reverse().slice(start, end);
+
+    return res.status(200).json({ messages });
   } catch (error) {
     return res.status(400).json({ error });
   }
