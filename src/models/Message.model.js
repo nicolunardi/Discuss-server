@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import autopop from "mongoose-autopopulate";
 
 const { Schema } = mongoose;
 
@@ -20,6 +21,7 @@ const messageSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "user",
     required: true,
+    autopopulate: true,
   },
   sentAt: {
     type: Date,
@@ -39,9 +41,24 @@ const messageSchema = new Schema({
     default: false,
   },
   reacts: {
-    user: { type: Schema.Types.ObjectId, ref: "user" },
-    react: { type: String },
+    type: [
+      {
+        user: { type: Schema.Types.ObjectId, ref: "user" },
+        react: { type: String },
+      },
+    ],
+    default: [],
   },
 });
+
+messageSchema.set("toJSON", {
+  transform: (doc, ret) => {
+    ret.id = ret._id;
+    delete ret.__v;
+    delete ret._id;
+  },
+});
+
+messageSchema.plugin(autopop);
 
 export default mongoose.model("message", messageSchema);

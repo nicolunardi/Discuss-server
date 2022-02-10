@@ -46,7 +46,7 @@ export const createMessage = async (req, res) => {
     }
 
     // create the message
-    const newMessage = await Message.create({
+    let newMessage = await Message.create({
       channel: channelId,
       message,
       image,
@@ -56,7 +56,24 @@ export const createMessage = async (req, res) => {
     channel.messages.push(newMessage._id);
     await channel.save();
 
-    return res.status(200).json({ newMessage });
+    newMessage = await newMessage.populate("sender");
+
+    return res.status(200).json({ message: newMessage });
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+};
+
+export const getPinnedMessages = async (req, res) => {
+  try {
+    const { channelId } = req.params;
+
+    const pinnedMessages = await Message.find({
+      channel: channelId,
+      pinned: true,
+    });
+
+    return res.status(200).json({ messages: pinnedMessages });
   } catch (error) {
     return res.status(400).json({ error });
   }
