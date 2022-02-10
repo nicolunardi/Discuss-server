@@ -20,7 +20,7 @@ app.use(express.json());
 // doesn't need auth
 app.use("/auth", authRoutes);
 
-// all routes taht require being logged in
+// all routes that require being logged in
 app.use(auth);
 app.use("/channels", channelRoutes);
 app.use("/users", userRoutes);

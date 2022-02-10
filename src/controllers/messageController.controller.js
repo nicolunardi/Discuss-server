@@ -11,9 +11,11 @@ export const getMessages = async (req, res) => {
     const { channelId } = req.params;
 
     // get the channel so that the messages can be returned
-    const channel = await Channel.findOne({ _id: channelId }).populate(
-      "messages"
-    );
+    const channel = await Channel.findOne({ _id: channelId }).populate({
+      path: "messages",
+      populate: { path: "sender", model: "user" },
+    });
+
     if (!channel) {
       return res.status(404).json({ error: "Channel does not exist" });
     }
@@ -54,7 +56,7 @@ export const createMessage = async (req, res) => {
     channel.messages.push(newMessage._id);
     await channel.save();
 
-    return res.status(200).json("message sent successfully");
+    return res.status(200).json({ newMessage });
   } catch (error) {
     return res.status(400).json({ error });
   }
