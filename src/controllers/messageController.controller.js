@@ -10,19 +10,11 @@ export const getMessages = async (req, res) => {
     const end = start + numberOfMsgs;
     const { channelId } = req.params;
 
-    // get the channel so that the messages can be returned
-    const channel = await Channel.findOne({ _id: channelId }).populate({
-      path: "messages",
-      populate: { path: "sender", model: "user" },
-    });
-
-    if (!channel) {
-      return res.status(404).json({ error: "Channel does not exist" });
-    }
+    const allMessages = await Message.find({ channel: channelId });
 
     // reverse the array as to get the newest messages first and slice
     // based on start and end
-    const messages = channel.messages.reverse().slice(start, end);
+    const messages = allMessages.reverse().slice(start, end);
 
     return res.status(200).json({ messages });
   } catch (error) {

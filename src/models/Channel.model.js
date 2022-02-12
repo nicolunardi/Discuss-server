@@ -32,10 +32,6 @@ const channelSchema = new Schema({
     type: [Schema.Types.ObjectId],
     ref: "user",
   },
-  messages: {
-    type: [Schema.Types.ObjectId],
-    ref: "message",
-  },
 });
 
 channelSchema.set("toJSON", {
