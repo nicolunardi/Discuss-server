@@ -31,11 +31,6 @@ export const createMessage = async (req, res) => {
     if (!(message || image)) {
       return res.status(409).json({ error: "Must not be empty." });
     }
-    // get the channel that the message is been sent to
-    const channel = await Channel.findOne({ _id: channelId });
-    if (!channel) {
-      return res.status(404).json({ error: "Channel does not exist" });
-    }
 
     // create the message
     let newMessage = await Message.create({
@@ -45,12 +40,36 @@ export const createMessage = async (req, res) => {
       sender: id,
     });
 
-    channel.messages.push(newMessage._id);
-    await channel.save();
-
     newMessage = await newMessage.populate("sender");
 
     return res.status(200).json({ message: newMessage });
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+};
+
+export const deleteMessage = async (req, res) => {
+  try {
+    const { messageId } = req.params;
+    // userId to verify the message belongs to the user
+    const { id } = req.payload;
+
+    // find the message
+    const message = await Message.findById(messageId);
+    if (!message) {
+      return res.status(404).json({ error: "Message not found" });
+    }
+
+    // ensure the message belongs to the user
+    if (message.sender._id.toString() !== id) {
+      return res
+        .status(403)
+        .json({ error: "Not authorized to delete this message." });
+    }
+    // delete the message
+    await Message.deleteOne({ id: messageId });
+
+    return res.status(200).json({});
   } catch (error) {
     return res.status(400).json({ error });
   }
@@ -66,6 +85,47 @@ export const getPinnedMessages = async (req, res) => {
     });
 
     return res.status(200).json({ messages: pinnedMessages });
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+};
+
+export const pinMessage = async (req, res) => {
+  try {
+    const { messageId } = req.params;
+
+    const message = await Message.findById(messageId);
+    if (!message) {
+      return res.status(404).json({ error: "Message not found." });
+    }
+    // update message to be pinned and save back to db
+    if (!message.pinned) {
+      message.pinned = true;
+      await message.save();
+    }
+
+    return res.status(200).json({});
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+};
+
+export const unpinMessage = async (req, res) => {
+  try {
+    const { messageId } = req.params;
+
+    const message = await Message.findById(messageId);
+    if (!message) {
+      return res.status(404).json({ error: "Message not found." });
+    }
+
+    // update message to be unpinned and save back to db
+    if (message.pinned) {
+      message.pinned = false;
+      await message.save();
+    }
+
+    return res.status(200).json({});
   } catch (error) {
     return res.status(400).json({ error });
   }
