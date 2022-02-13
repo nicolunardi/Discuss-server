@@ -48,6 +48,31 @@ export const createMessage = async (req, res) => {
   }
 };
 
+export const editMessage = async (req, res) => {
+  try {
+    const { messageId } = req.params;
+    const { message, image } = req.body;
+
+    // ensure the message is not empty
+    if (!(message || image)) {
+      return res.status(400).json({ error: "Must not be empty." });
+    }
+    // get the message that will be edited
+    const messageToUpdate = await Message.findById(messageId);
+
+    // update the message and save
+    messageToUpdate.message = message;
+    messageToUpdate.image = image;
+    messageToUpdate.edited = true;
+    messageToUpdate.editedAt = Date.now();
+    await messageToUpdate.save();
+
+    return res.status(200).json({ message: messageToUpdate });
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+};
+
 export const deleteMessage = async (req, res) => {
   try {
     const { messageId } = req.params;

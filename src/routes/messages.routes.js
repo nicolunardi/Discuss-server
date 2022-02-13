@@ -6,6 +6,7 @@ import {
   pinMessage,
   unpinMessage,
   deleteMessage,
+  editMessage,
 } from "../controllers/messageController.controller.js";
 
 const router = express.Router();
@@ -17,10 +18,8 @@ router.get("/:channelId", getMessages);
 router.post("/:channelId", createMessage);
 
 // done
-router.put("/:channelId/:messageId", (req, res) => {
-  res.send("update message of channel");
-});
-// doing
+router.put("/:channelId/:messageId", editMessage);
+// done
 router.delete("/:channelId/:messageId", deleteMessage);
 // done
 router.get("/pin/:channelId", getPinnedMessages);
