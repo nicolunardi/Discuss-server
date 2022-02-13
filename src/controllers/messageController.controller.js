@@ -155,3 +155,70 @@ export const unpinMessage = async (req, res) => {
     return res.status(400).json({ error });
   }
 };
+
+export const react = async (req, res) => {
+  try {
+    const { messageId } = req.params;
+    // user id
+    const { id } = req.payload;
+    const { react } = req.body;
+
+    if (!react) {
+      return res.status(400).json({ error: "Must provide a valid reaction." });
+    }
+
+    const message = await Message.findById(messageId);
+    if (!message) {
+      return res.status(404).json({ error: "Message not found." });
+    }
+    // check that the user hasn't already sent the same reaction
+    if (
+      message.reacts.find((r) => r.user.toString() === id && r.react === react)
+    ) {
+      res.status(400).json({ error: "You have already sent that reaction" });
+    }
+
+    message.reacts.push({ user: id, react });
+    await message.save();
+
+    return res.status(200).json({ message });
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+};
+
+export const unreact = async (req, res) => {
+  try {
+    const { messageId } = req.params;
+    // user id
+    const { id } = req.payload;
+    const { react } = req.body;
+
+    if (!react) {
+      return res.status(400).json({ error: "Must provide a valid reaction." });
+    }
+
+    const message = await Message.findById(messageId);
+    if (!message) {
+      return res.status(404).json({ error: "Message not found." });
+    }
+
+    // check that the user hasn't already sent the same reaction by getting the index
+    // of the element in the array. Using this instead of find() as with teh index you can
+    // access the _id of the react to then remove it using pull()
+    const reactIndex = message.reacts.findIndex(
+      (r) => r.user.toString() === id && r.react === react
+    );
+    if (reactIndex === -1) {
+      return res
+        .status(400)
+        .json({ error: "You have not sent that reaction yet." });
+    }
+    message.reacts.pull({ _id: message.reacts[reactIndex] });
+    await message.save();
+
+    return res.status(200).json({ message });
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+};

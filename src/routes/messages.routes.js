@@ -7,16 +7,16 @@ import {
   unpinMessage,
   deleteMessage,
   editMessage,
+  react,
+  unreact,
 } from "../controllers/messageController.controller.js";
 
 const router = express.Router();
 
 // done
 router.get("/:channelId", getMessages);
-
 // done
 router.post("/:channelId", createMessage);
-
 // done
 router.put("/:channelId/:messageId", editMessage);
 // done
@@ -28,8 +28,8 @@ router.post("/pin/:channelId/:messageId", pinMessage);
 // done
 router.post("/unpin/:channelId/:messageId", unpinMessage);
 
-router.post("/react/:channelId/:messageId", (req, res) => {
-  res.send("react to message of channel");
-});
+router.post("/react/:channelId/:messageId", react);
+
+router.post("/unreact/:channelId/:messageId", unreact);
 
 export default router;
