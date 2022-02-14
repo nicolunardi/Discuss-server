@@ -56,6 +56,40 @@ export const getChannel = async (req, res) => {
   }
 };
 
+export const updateChannel = async (req, res) => {
+  try {
+    const { channelId } = req.params;
+    // user id
+    const { id } = req.payload;
+    const { name, description } = req.body;
+
+    // name must not be empty
+    if (!name) {
+      return res.status(400).json({ error: "Name must not be empty" });
+    }
+
+    // find channel
+    const channel = await Channel.findById(channelId);
+    if (!channel) {
+      return res.status(404).json({ error: "Channel not found." });
+    }
+    // user must be the creator to edit the channel info
+    if (channel.creator.toString() !== id) {
+      return res
+        .status(403)
+        .json({ error: "Not authorized to change channel info." });
+    }
+
+    channel.name = name;
+    channel.description = description;
+    await channel.save();
+
+    return res.status(200).json({ channel });
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+};
+
 export const joinChannel = async (req, res) => {
   try {
     const { channelId } = req.params;

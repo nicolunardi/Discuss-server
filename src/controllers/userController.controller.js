@@ -19,8 +19,9 @@ export const allUsers = async (req, res) => {
  */
 export const getUser = async (req, res) => {
   try {
+    // user id to be retrieved
     const userId = req.params.userId;
-    const user = await User.findOne({ _id: userId });
+    const user = await User.findById(userId).lean();
     if (!user) {
       return res
         .status(404)
@@ -37,16 +38,19 @@ export const getUser = async (req, res) => {
  */
 export const updateUser = async (req, res) => {
   try {
-    const { name, email, password, bio, image } = req.body;
+    const { id } = req.payload;
+    const { name, password, bio, image } = req.body;
     // find the user from the DB
-    const user = await User.findOne({ email });
+    const user = await User.findById(id);
 
     if (!user) {
       return res.status(404).json("That user doesn't exist.");
     }
     // update the user and save to the db
     user.name = name;
-    user.password = await bcrypt.hash(password, 10);
+    if (password) {
+      user.password = await bcrypt.hash(password, 10);
+    }
     user.bio = bio;
     user.image = image;
 

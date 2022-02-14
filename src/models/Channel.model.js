@@ -20,7 +20,7 @@ const channelSchema = new Schema({
     default: true,
   },
   description: {
-    types: String,
+    type: String,
     default: "",
   },
   createdAt: {

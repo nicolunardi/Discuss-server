@@ -6,6 +6,7 @@ import {
   invite,
   joinChannel,
   leaveChannel,
+  updateChannel,
 } from "../controllers/channelController.controller.js";
 
 const router = express.Router();
@@ -16,9 +17,7 @@ router.post("/", createChannel);
 
 router.get("/:channelId", getChannel);
 
-router.put("/:channelId", (req, res) => {
-  res.send("update channel of channelId", req.params.channelId);
-});
+router.put("/:channelId", updateChannel);
 
 router.post("/:channelId/join", joinChannel);
 
