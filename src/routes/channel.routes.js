@@ -3,6 +3,9 @@ import {
   allChannels,
   createChannel,
   getChannel,
+  invite,
+  joinChannel,
+  leaveChannel,
 } from "../controllers/channelController.controller.js";
 
 const router = express.Router();
@@ -11,22 +14,16 @@ router.get("/", allChannels);
 
 router.post("/", createChannel);
 
-router.get("/:id", getChannel);
+router.get("/:channelId", getChannel);
 
-router.put("/:id", (req, res) => {
-  res.send("update channel of id", req.params.id);
+router.put("/:channelId", (req, res) => {
+  res.send("update channel of channelId", req.params.channelId);
 });
 
-router.post("/:id/join", (req, res) => {
-  res.send("join");
-});
+router.post("/:channelId/join", joinChannel);
 
-router.post("/:id/leave", (req, res) => {
-  res.send("leave");
-});
+router.post("/:channelId/leave", leaveChannel);
 
-router.post("/:id/invite", (req, res) => {
-  res.send("invite");
-});
+router.post("/:channelId/invite", invite);
 
 export default router;
