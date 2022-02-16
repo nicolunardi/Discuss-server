@@ -1,4 +1,4 @@
-import { Channel, Message } from "../models/index.js";
+import { Message } from "../models/index.js";
 
 export const getMessages = async (req, res) => {
   try {
