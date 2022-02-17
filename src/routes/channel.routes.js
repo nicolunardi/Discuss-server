@@ -12,17 +12,11 @@ import {
 const router = express.Router();
 
 router.get("/", allChannels);
-
 router.post("/", createChannel);
-
 router.get("/:channelId", getChannel);
-
 router.put("/:channelId", updateChannel);
-
 router.post("/:channelId/join", joinChannel);
-
 router.post("/:channelId/leave", leaveChannel);
-
 router.post("/:channelId/invite", invite);
 
 export default router;

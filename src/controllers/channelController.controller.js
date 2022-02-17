@@ -173,9 +173,7 @@ export const invite = async (req, res) => {
         .json({ error: "Not authorized to add members to this channel." });
     }
 
-    console.log(id);
     // check the user to be invited is not already a member
-    console.log(userId, channel);
     if (assertUserIsMember(channel, userId)) {
       return res
         .status(403)
