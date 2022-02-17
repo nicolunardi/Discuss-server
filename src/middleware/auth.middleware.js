@@ -7,7 +7,7 @@ const verifyJWT = (req, res, next) => {
   if (!token) {
     return res
       .status(403)
-      .send({ error: "No token provided for authentication." });
+      .json({ error: "No token provided for authentication." });
   }
 
   //   verify the token and add the payload to the request object
@@ -15,7 +15,7 @@ const verifyJWT = (req, res, next) => {
     const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     req.payload = payload;
   } catch (error) {
-    return res.status(401).send("Invalid Token");
+    return res.status(401).json({ error: "Invalid Token" });
   }
 
   return next();
