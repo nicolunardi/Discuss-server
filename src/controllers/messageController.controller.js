@@ -92,7 +92,7 @@ export const deleteMessage = async (req, res) => {
         .json({ error: "Not authorized to delete this message." });
     }
     // delete the message
-    await Message.deleteOne({ id: messageId });
+    await Message.deleteOne({ _id: message._id });
 
     return res.status(200).json({});
   } catch (error) {
